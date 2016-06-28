@@ -12,11 +12,11 @@ from firefish.meshsnappy import SnappyHexMesh
 from subprocess import call
 
 ###simulation parameters#####
-part_list = ['dart', 'core', 'boatTail', 'fin1', 'fin2', 'fin3', 'fin4']
-path_list = ['STLS/dart.stl', 'STLS/core.stl', 'STLS/boatTail.stl', 'STLS/fin1.stl', 'STLS/fin2.stl', 'STLS/fin3.stl', 'STLS/fin4.stl'] 
+part_list = ['dart', 'core']
+path_list = ['STLS/dart.stl', 'STLS/core.stl'] 
 
-timeStep = 1e-7
-endTime = 0.10
+timeStep = 2e-5
+endTime = 2.0
 interval = 10000*timeStep
 processors = 4
 streamVelocity = 4
@@ -25,7 +25,7 @@ vy = streamVelocity * math.cos(angle_of_attack)
 vx = streamVelocity * math.sin(angle_of_attack)
 #####simulation parameters#######
 
-def main(case_dir='turblenceTest', runRhoCentral = False, parallel = True):
+def main(case_dir='SingleM4A0', runRhoCentral = False, parallel = True):
 	#Create a new case file, raise an error if the directory already exists
 	case = create_new_case(case_dir)
 	write_control_dict(case)
@@ -114,8 +114,8 @@ def write_control_dict(case):
 				'functionObjectLibs' : ['"libforces.so"'],
 				'patches':part_list[0:1],
 				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
+				'rhoInf':1.4,
+				'CofR':[0.137, 2.233, 0.1373],
 			},
 			##core
 			'forcesCore':{
@@ -123,54 +123,55 @@ def write_control_dict(case):
 				'functionObjectLibs' : ['"libforces.so"'],
 				'patches':part_list[1:2],
 				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
-			},
-			#fin
-			'forcesboatTail':{
-				'type': 'forces',
-				'functionObjectLibs' : ['"libforces.so"'],
-				'patches':part_list[2:3],
-				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
-			},
-			#fin
-			'forcesFin1':{
-				'type': 'forces',
-				'functionObjectLibs' : ['"libforces.so"'],
-				'patches':part_list[3:4],
-				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
-			},
-			#fin
-			'forcesFin2':{
-				'type': 'forces',
-				'functionObjectLibs' : ['"libforces.so"'],
-				'patches':part_list[4:5],
-				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
-			},
-			#fin
-			'forcesFin3':{
-				'type': 'forces',
-				'functionObjectLibs' : ['"libforces.so"'],
-				'patches':part_list[5:6],
-				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
-			},
-			#fin
-			'forcesFin4':{
-				'type': 'forces',
-				'functionObjectLibs' : ['"libforces.so"'],
-				'patches':part_list[6:7],
-				'rhoName': 'rhoInf',
-				'rhoInf':4.7,
-				'CofR':[0, 0, 0],
-			},
+				'rhoInf':1.4,
+				'CofR':[0.137, 2.233, 0.1373],
+			}
+#			},
+#			#fin
+#			'forcesboatTail':{
+#				'type': 'forces',
+#				'functionObjectLibs' : ['"libforces.so"'],
+#				'patches':part_list[2:3],
+#				'rhoName': 'rhoInf',
+#				'rhoInf':4.7,
+#				'CofR':[0, 0, 0],
+#			},
+#			#fin
+#			'forcesFin1':{
+#				'type': 'forces',
+#				'functionObjectLibs' : ['"libforces.so"'],
+#				'patches':part_list[3:4],
+#				'rhoName': 'rhoInf',
+#				'rhoInf':4.7,
+#				'CofR':[0, 0, 0],
+#			},
+#			#fin
+#			'forcesFin2':{
+#				'type': 'forces',
+#				'functionObjectLibs' : ['"libforces.so"'],
+#				'patches':part_list[4:5],
+#				'rhoName': 'rhoInf',
+#				'rhoInf':4.7,
+#				'CofR':[0, 0, 0],
+#			},
+#			#fin
+#			'forcesFin3':{
+#				'type': 'forces',
+#				'functionObjectLibs' : ['"libforces.so"'],
+#				'patches':part_list[5:6],
+#				'rhoName': 'rhoInf',
+#				'rhoInf':4.7,
+#				'CofR':[0, 0, 0],
+#			},
+#			#fin
+#			'forcesFin4':{
+#				'type': 'forces',
+#				'functionObjectLibs' : ['"libforces.so"'],
+#				'patches':part_list[6:7],
+#				'rhoName': 'rhoInf',
+#				'rhoInf':4.7,
+#				'CofR':[0, 0, 0],
+#			},
 		}
 	}
 
