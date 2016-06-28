@@ -36,7 +36,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from firefish.finflutter import model_atmosphere, flutter_velocity_transonic, flutter_velocity_supersonic
 
-def main(output='flutter-velocity-example.pdf'):
+def main(output='root-dependence.pdf'):
     """
     >>> import io
     >>> fobj = io.BytesIO()
@@ -48,17 +48,20 @@ def main(output='flutter-velocity-example.pdf'):
     zs = np.linspace(0, 20000, 200)
     ps, ts, ss = model_atmosphere(zs)
     rhos = (ps/1000) / (0.2869 * (ts + 273.1))
-    vs_t = flutter_velocity_transonic(ps, ss, 14.02, 7, 8.59, 0.5)
-    vs_s1 = flutter_velocity_supersonic(rhos, 5026, 11671, 0.0923, 0.0859, 0.0284, 0.0040, 4.3)
-    vs_s2 = flutter_velocity_supersonic(rhos, 5026, 11671, 0.0923, 0.0859, 0.0284, 0.0040, 3)
-    vs_s3 = flutter_velocity_supersonic(rhos, 5026, 11671, 0.0923, 0.0859, 0.0284, 0.0040, 2)
+    vs_t = flutter_velocity_transonic(ps, ss, 14.02, 7, 14, 0.5)
+    #vs_s1 = flutter_velocity_supersonic(rhos, 5026, 11671, 0.0923, 0.0859, 0.0284, 0.0040, 4.3)
+    vs_t2 = flutter_velocity_transonic(ps, ss, 15.02, 7, 14, 0.5)
+    vs_t3 = flutter_velocity_transonic(ps, ss, 16.02, 7, 14, 0.5)
+    vs_t4 = flutter_velocity_transonic(ps, ss, 13.02, 7, 14, 0.5)
+    vs_t5 = flutter_velocity_transonic(ps, ss, 12.02, 7, 14, 0.5)
 
     plt.figure()
     #plt.plot(zs * 1e-3, vs_t, 'r', label="transonic flutter velocity")
-    plt.plot(zs*1e-3, vs_t/343.2, 'c', label="Theodorson")
-    plt.plot(zs*1e-3, vs_s1/343.2, 'g', label="Mach 4.3")
-    plt.plot(zs*1e-3, vs_s2/343.2, 'r', label="Mach 3")
-    plt.plot(zs*1e-3, vs_s3/343.2, 'b', label="Mach 2")
+    plt.plot(zs*1e-3, vs_t5/343.2, 'y', label="root = 12")
+    plt.plot(zs*1e-3, vs_t4/343.2, 'b', label="tiroot = 13")    
+    plt.plot(zs*1e-3, vs_t/343.2, 'c', label="root = 14")
+    plt.plot(zs*1e-3, vs_t2/343.2, 'g', label="root = 15")
+    plt.plot(zs*1e-3, vs_t3/343.2, 'r', label="root = 16")
 
     plt.title('Flutter velocity vs altitude, Core/Booster fin')
     plt.xlabel('Altitude [km]')
