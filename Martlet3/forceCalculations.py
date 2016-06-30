@@ -23,9 +23,10 @@ streamVelocity = 4
 angle_of_attack = math.radians(0)
 vy = streamVelocity * math.cos(angle_of_attack)
 vx = streamVelocity * math.sin(angle_of_attack)
+turbulent = False
 #####simulation parameters#######
 
-def main(case_dir='SingleM4A0', runRhoCentral = False, parallel = True):
+def main(case_dir='turbulentTest', runRhoCentral = False, parallel = True):
 	#Create a new case file, raise an error if the directory already exists
 	case = create_new_case(case_dir)
 	write_control_dict(case)
@@ -51,6 +52,8 @@ def main(case_dir='SingleM4A0', runRhoCentral = False, parallel = True):
 	write_thermophysical_properties(case)
 	write_turbulence_properties(case)
 	write_initial_conditions(case)
+	if turbulent:
+		write_initial_turbulence(case)
 	write_decompose_settings(case, processors, "simple")
 	snap.generate_mesh()
 #	#getTrueMesh(case)
@@ -306,15 +309,19 @@ def write_thermophysical_properties(case):
 		d.update(thermo_dict)
 
 def write_turbulence_properties(case):
-	"""Disables the turbulent solver"""
-	turbulence_dict = {
-		'simulationType' : 'RAS',
-		'RAS' : {
-			'RASModel' : 'kEpsilon',
-			'turbulence' : 'on',
-			'printCoeffs' : 'on'
+	"""Enables turbulence based on the property "turbulent"""
+	if turbulent:
+		turbulence_dict = {
+			'simulationType' : 'RAS',
+			'RAS' : {
+				'RASModel' : 'kEpsilon',
+				'turbulence' : 'on',
+				'printCoeffs' : 'on'
+			}
 		}
-	}
+	else:
+		turbulence_dict = {
+			'simulationType' : 'laminar'}
 	
 	with case.mutable_data_file(FileName.TURBULENCE_PROPERTIES) as d:
 		d.update(turbulence_dict)
@@ -406,6 +413,8 @@ def write_initial_conditions(case):
 			'internalField': ('uniform', 1),
 			'boundaryField': boundaryDict
 		})
+
+def write_initial_turbulence(case):
 	#write k boundary conditions
 	K_file = case.mutable_data_file(
 		'0/k', create_class=FileClass.SCALAR_FIELD_3D
